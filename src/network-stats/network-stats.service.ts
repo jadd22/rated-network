@@ -1,12 +1,12 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { response } from 'express';
 import { map, Observable } from 'rxjs';
 
 @Injectable()
 export class NetworkStatsService {
-  constructor(private readonly httpService: HttpService,
+  constructor(
+    private readonly httpService: HttpService,
     private readonly configService: ConfigService
   ) {}
 
