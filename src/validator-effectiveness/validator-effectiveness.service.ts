@@ -52,9 +52,10 @@ export class ValidatorEffectivenessService extends DBAbstractService {
         .pipe(
           map(async (response) => {
             this.createValidatorEffectiveness(response.data.data);
-            return;
+            return response.data;
           }),
         );
+      return result;
     } catch (error) {
       console.error(error.message);
     }
