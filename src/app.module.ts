@@ -5,6 +5,7 @@ import { NetworkStatsModule } from './network-stats/network-stats.module';
 import { ConfigModule } from '@nestjs/config';
 import { ValidatorEffectivenessModule } from './validator-effectiveness/validator-effectiveness.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { OpertaorEffectivenessModule } from './opertaor-effectiveness/opertaor-effectiveness.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
     NetworkStatsModule,
     ValidatorEffectivenessModule,
+    OpertaorEffectivenessModule,
   ],
   controllers: [AppController],
   providers: [AppService],

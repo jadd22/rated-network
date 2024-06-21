@@ -1,26 +1,27 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import { CreateOpertaorEffectivenessDto } from './dto/create-opertaor-effectiveness.dto';
+import { UpdateOpertaorEffectivenessDto } from './dto/update-opertaor-effectiveness.dto';
+import { OpertaorEffectiveness } from './entities/opertaor-effectiveness.entity';
+import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-
-import { map, Observable } from 'rxjs';
-import { DBAbstractService } from 'src/shared/db-abstract.service';
-import { ValidatorEffectiveness } from './entities/validator-effectiveness.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { DBAbstractService } from 'src/shared/db-abstract.service';
 import { error } from 'console';
+import { Observable, map } from 'rxjs';
 
 @Injectable()
-export class ValidatorEffectivenessService extends DBAbstractService {
+export class OpertaorEffectivenessService extends DBAbstractService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
-    @InjectRepository(ValidatorEffectiveness)
-    private readonly validatorEffectivenessRepo: Repository<ValidatorEffectiveness>,
+    @InjectRepository(OpertaorEffectiveness)
+    private readonly opertaorEffectiveness: Repository<OpertaorEffectiveness>,
   ) {
-    super(validatorEffectivenessRepo);
+    super(opertaorEffectiveness);
   }
 
-  getValidtorEffectiveness(
+  getOperatorEffectiveness(
     fromDate: string,
     granularity: string,
     filterType: string,
@@ -40,9 +41,9 @@ export class ValidatorEffectivenessService extends DBAbstractService {
         size: size,
       };
 
-      console.log(`validatorPubKey :${this.configService.get('VALIDATOR_1')}`);
+      console.log(`validatorPubKey :${this.configService.get('OPERATOR_1')}`);
       console.log(`params :${JSON.stringify(params)}`);
-      const URL = `/validators/${this.configService.get('VALIDATOR_1')}/effectiveness`;
+      const URL = `/operators/${this.configService.get('OPERATOR_1')}/effectiveness`;
       const result = this.httpService
         .get(this.configService.get('BASE_URL') + URL, {
           headers: reqHeaders,
@@ -50,7 +51,7 @@ export class ValidatorEffectivenessService extends DBAbstractService {
         })
         .pipe(
           map(async (response) => {
-            this.createValidatorEffectiveness(response.data.data);
+            this.createOperatorEffectiveness(response.data.data);
             return response.data;
           }),
         );
@@ -60,12 +61,16 @@ export class ValidatorEffectivenessService extends DBAbstractService {
     }
   }
 
-  async createValidatorEffectiveness(
-    validatorEffectiveness: ValidatorEffectiveness[],
+  async createOperatorEffectiveness(
+    opertaorEffectiveness: OpertaorEffectiveness[],
   ) {
-    if (validatorEffectiveness && validatorEffectiveness.length > 0) {
-      console.log(`validatorEffectiveness: ${validatorEffectiveness}`);
-      const result = await this.save(validatorEffectiveness);
+    if (opertaorEffectiveness && opertaorEffectiveness.length > 0) {
+      const newOperator = opertaorEffectiveness.map(({ id, ...rest }) => ({
+        operatorId: id,
+        ...rest,
+      }));
+      console.log(`opertaorEffectiveness: ${JSON.stringify(newOperator)}`);
+      const result = await this.save(newOperator);
       if (!result) {
         throw new error(`Failed to store validator data: ${result}`);
       }

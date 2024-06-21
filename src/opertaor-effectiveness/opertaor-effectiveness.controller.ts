@@ -1,12 +1,12 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ValidatorEffectivenessService } from './validator-effectiveness.service';
+import { Controller, Get, Query } from '@nestjs/common';
+import { OpertaorEffectivenessService } from './opertaor-effectiveness.service';
+import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { ApiOperation, ApiParam, ApiQuery } from '@nestjs/swagger';
 
-@Controller('validatoreffectiveness')
-export class ValidatorEffectivenessController {
+@Controller('opertaor-effectiveness')
+export class OpertaorEffectivenessController {
   constructor(
-    private readonly validatorEffectivenessService: ValidatorEffectivenessService,
+    private readonly opertaorEffectivenessService: OpertaorEffectivenessService,
   ) {}
 
   @Get()
@@ -50,7 +50,7 @@ export class ValidatorEffectivenessController {
     @Query('granularity') granularity: string,
     @Query('size') size: number,
   ): Observable<any> {
-    return this.validatorEffectivenessService.getValidtorEffectiveness(
+    return this.opertaorEffectivenessService.getOperatorEffectiveness(
       from,
       granularity,
       filterType,
