@@ -8,6 +8,7 @@ import { ValidatorEffectiveness } from './entities/validator-effectiveness.entit
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AxiosResponse } from 'axios';
+import { error } from 'console';
 
 @Injectable()
 export class ValidatorEffectivenessService extends DBAbstractService {
@@ -49,27 +50,26 @@ export class ValidatorEffectivenessService extends DBAbstractService {
           params: params,
         })
         .pipe(
-          map((response: AxiosResponse<any>) => {
-            const data = response.data;
-            console.log(`apiData: ${JSON.stringify(data)}`);
-            const res = data.data[0];
-            const resultByDay = {
-              granularity: granularity,
-              day: fromDate,
-              uptime: res.uptime,
-              sumAllRewards: res.sumAllRewards,
-              attesterEffectiveness: res.attesterEffectiveness,
-            };
-            console.log(`res: ${JSON.stringify(res)}`);
-            console.log(`res: ${JSON.stringify(resultByDay)}`);
-            return from(this.save(resultByDay));
+          map(async (response) => {
+            this.createValidatorEffectiveness(response.data.data);
+            return;
           }),
         );
-
-      // const res = from(this.save(resultByDay));
-      return result;
     } catch (error) {
       console.error(error.message);
+    }
+  }
+
+  async createValidatorEffectiveness(
+    validatorEffectiveness: ValidatorEffectiveness[],
+  ) {
+    if (validatorEffectiveness && validatorEffectiveness.length > 0) {
+      console.log(`validatorEffectiveness: ${validatorEffectiveness}`);
+      const result = await this.save(validatorEffectiveness);
+      if (!result) {
+        throw new error(`Failed to store validator data: ${result}`);
+      }
+      return;
     }
   }
 }

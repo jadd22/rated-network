@@ -11,9 +11,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: '65.0.184.98',
+      host: '127.0.0.1',
       port: 5432,
-      password: 'admin',
+      password: 'postgres',
       username: 'postgres',
       database: 'postgres',
       synchronize: true,
