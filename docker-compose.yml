@@ -1,0 +1,49 @@
+version: '3'
+services:
+  nest-app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: nest-app-container
+    ports:
+      - '3000:3000'
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD
+      - DATABASE_NAME
+      - DATABASE_SYNCHRONIZE
+      - NODE_ENV
+  
+  postgres:
+    image: postgres:13
+    container_name: pg-db-container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: rated-network
+    # volumes:
+    #   - pg-data:/var/lib/postgresql/data/
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin4_container
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    # volumes:
+    #   - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+# volumes:
+#   pg-data:
+#   pgadmin-data:
+      
+      
+  

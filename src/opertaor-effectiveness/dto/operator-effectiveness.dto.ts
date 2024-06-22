@@ -6,11 +6,11 @@ export class OperatorEffectivenessDto {
 
   @IsOptional()
   @IsString()
-  readonly from?: Date;
+  readonly from?: string;
 
   @IsOptional()
   @IsString()
-  readonly to?: Date;
+  readonly to?: string;
 
   @IsString()
   readonly granularity: string;
