@@ -1,32 +1,35 @@
 import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
 @Entity()
-export class ValidatorEffectiveness {
+export class OpertaorEffectiveness {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   day: string;
 
+  @Column()
+  operatorId: string;
+
   @Column('decimal', { precision: 6, scale: 2 })
-  uptime: number;
+  avgUptime: number;
 
   @Column()
-  sumAllRewards: number;
+  validatorCount: number;
 
   @Column('decimal', { precision: 30, scale: 2 })
-  attesterEffectiveness: number;
+  avgValidatorEffectiveness: number;
   @Column()
   startEpoch: number;
   @Column()
   endEpoch: number;
   @Column('decimal', { precision: 30, scale: 2 })
-  earnings: number;
+  totalUniqueAttestations: number;
   @Column('decimal', { precision: 30, scale: 2 })
-  validatorEffectiveness: number;
+  sumMissedAttestationRewards: number;
   @Column('decimal', { precision: 30, scale: 2 })
   sumAttestationRewards: number;
   @Column('decimal', { precision: 30, scale: 2 })
-  sumLateSourcePenalties: number;
-  @Column()
-  validatorIndex: number;
+  networkPenetration: number;
+  @Column({ type: 'bigint' })
+  sumAllRewards: string;
 }

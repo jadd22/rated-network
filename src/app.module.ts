@@ -5,15 +5,16 @@ import { NetworkStatsModule } from './network-stats/network-stats.module';
 import { ConfigModule } from '@nestjs/config';
 import { ValidatorEffectivenessModule } from './validator-effectiveness/validator-effectiveness.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { OpertaorEffectivenessModule } from './opertaor-effectiveness/opertaor-effectiveness.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: '65.0.184.98',
+      host: '127.0.0.1',
       port: 5432,
-      password: 'admin',
+      password: 'postgres',
       username: 'postgres',
       database: 'postgres',
       synchronize: true,
@@ -22,6 +23,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
     NetworkStatsModule,
     ValidatorEffectivenessModule,
+    OpertaorEffectivenessModule,
   ],
   controllers: [AppController],
   providers: [AppService],
