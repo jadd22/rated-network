@@ -8,6 +8,8 @@ import { ValidatorEffectiveness } from './entities/validator-effectiveness.entit
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { error } from 'console';
+import { ValidatorEffectivenessDto } from './dto/validator-effectiveness.dto';
+import { GET_DATE } from 'src/shared/common';
 
 @Injectable()
 export class ValidatorEffectivenessService extends DBAbstractService {
@@ -21,10 +23,7 @@ export class ValidatorEffectivenessService extends DBAbstractService {
   }
 
   getValidtorEffectiveness(
-    fromDate: string,
-    granularity: string,
-    filterType: string,
-    size: number,
+    validatorEffectivenessDto: ValidatorEffectivenessDto,
   ): Observable<any> {
     try {
       const reqHeaders = {
@@ -34,15 +33,18 @@ export class ValidatorEffectivenessService extends DBAbstractService {
       };
 
       const params = {
-        from: fromDate,
-        granularity: granularity,
-        filterType: filterType,
-        size: size,
+        from: validatorEffectivenessDto.from
+          ? validatorEffectivenessDto.from
+          : GET_DATE(0),
+        granularity: validatorEffectivenessDto.granularity,
+        filterType: validatorEffectivenessDto.filterType,
+        size: validatorEffectivenessDto.size,
+        to: validatorEffectivenessDto.to
+          ? validatorEffectivenessDto
+          : GET_DATE(0),
       };
-
-      console.log(`validatorPubKey :${this.configService.get('VALIDATOR_1')}`);
-      console.log(`params :${JSON.stringify(params)}`);
-      const URL = `/validators/${this.configService.get('VALIDATOR_1')}/effectiveness`;
+      console.log(`params: ${JSON.stringify(params)}`);
+      const URL = `/validators/${validatorEffectivenessDto.validatorId}/effectiveness`;
       const result = this.httpService
         .get(this.configService.get('BASE_URL') + URL, {
           headers: reqHeaders,
@@ -54,6 +56,7 @@ export class ValidatorEffectivenessService extends DBAbstractService {
             return response.data;
           }),
         );
+
       return result;
     } catch (error) {
       console.error(error.message);
@@ -64,7 +67,6 @@ export class ValidatorEffectivenessService extends DBAbstractService {
     validatorEffectiveness: ValidatorEffectiveness[],
   ) {
     if (validatorEffectiveness && validatorEffectiveness.length > 0) {
-      console.log(`validatorEffectiveness: ${validatorEffectiveness}`);
       const result = await this.save(validatorEffectiveness);
       if (!result) {
         throw new error(`Failed to store validator data: ${result}`);

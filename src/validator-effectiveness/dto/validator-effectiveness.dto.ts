@@ -1,21 +1,24 @@
-import { IsString, IsInt } from 'class-validator';
+import { IsString, IsInt, IsOptional } from 'class-validator';
 
 export class ValidatorEffectivenessDto {
-    @IsString()
-    readonly validatorPubKey: string;
-  
-    @IsString()
-    readonly from: string;
+  @IsString()
+  validatorId: string;
 
-    @IsString()
-    readonly to: string;
+  @IsOptional()
+  @IsString()
+  from?: string;
 
-    @IsString()
-    readonly granularity: string;
+  @IsOptional()
+  @IsString()
+  to?: string;
 
-    @IsString()
-    readonly filterType: string;
-  
-    @IsInt()
-    readonly size: number;
+  @IsString()
+  granularity: string;
+
+  @IsString()
+  filterType: string;
+
+  @IsOptional()
+  @IsInt()
+  size: number;
 }

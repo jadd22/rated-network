@@ -2,6 +2,12 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { OpertaorEffectivenessService } from './opertaor-effectiveness.service';
 import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
+import { OperatorEffectivenessDto } from './dto/operator-effectiveness.dto';
+import {
+  FILTER_TYPE,
+  GRANULARITY_TYPE,
+  OPERATOR_NAME,
+} from 'src/shared/common';
 
 @Controller('opertaor-effectiveness')
 export class OpertaorEffectivenessController {
@@ -13,14 +19,22 @@ export class OpertaorEffectivenessController {
   @ApiOperation({
     summary: 'Get users with optional filters from external API',
   })
-  // @ApiParam({
-  //   name: 'validtorPubKey',
-  //   required: true,
-  //   description: 'Validtor Public Key',
-  //   type: String,
-  // })
+  @ApiQuery({
+    name: 'operatorId',
+    required: true,
+    description: 'Operator Unique Name',
+    type: String,
+    enum: OPERATOR_NAME,
+    example: OPERATOR_NAME.Kiln,
+  })
   @ApiQuery({
     name: 'from',
+    required: false,
+    description: 'Filter users by from date',
+    type: String,
+  })
+  @ApiQuery({
+    name: 'to',
     required: false,
     description: 'Filter users by from date',
     type: String,
@@ -29,13 +43,16 @@ export class OpertaorEffectivenessController {
     name: 'filterType',
     required: false,
     description: 'Filter result by specific type',
-    type: String,
+    enum: FILTER_TYPE,
+    example: FILTER_TYPE.datetime,
   })
   @ApiQuery({
     name: 'granularity',
     required: false,
     description: 'Granularity of result by day, week, month',
     type: String,
+    enum: GRANULARITY_TYPE,
+    example: GRANULARITY_TYPE.day,
   })
   @ApiQuery({
     name: 'size',
@@ -44,17 +61,10 @@ export class OpertaorEffectivenessController {
     type: Number,
   })
   getValidtorEffectiveness(
-    @Query('request') ValidtorEffectiveness,
-    @Query('from') from: string,
-    @Query('filterType') filterType: string,
-    @Query('granularity') granularity: string,
-    @Query('size') size: number,
+    @Query() operatorEffectivenessDto: OperatorEffectivenessDto,
   ): Observable<any> {
     return this.opertaorEffectivenessService.getOperatorEffectiveness(
-      from,
-      granularity,
-      filterType,
-      size,
+      operatorEffectivenessDto,
     );
   }
 }

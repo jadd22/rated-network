@@ -2,6 +2,8 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ValidatorEffectivenessService } from './validator-effectiveness.service';
 import { Observable } from 'rxjs';
 import { ApiOperation, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { FILTER_TYPE, GRANULARITY_TYPE, VALIDATOR_ID } from 'src/shared/common';
+import { ValidatorEffectivenessDto } from './dto/validator-effectiveness.dto';
 
 @Controller('validatoreffectiveness')
 export class ValidatorEffectivenessController {
@@ -13,14 +15,22 @@ export class ValidatorEffectivenessController {
   @ApiOperation({
     summary: 'Get users with optional filters from external API',
   })
-  // @ApiParam({
-  //   name: 'validtorPubKey',
-  //   required: true,
-  //   description: 'Validtor Public Key',
-  //   type: String,
-  // })
+  @ApiQuery({
+    name: 'validatorId',
+    required: true,
+    description: 'Public key of validator',
+    type: String,
+    enum: VALIDATOR_ID,
+    example: VALIDATOR_ID.ONE,
+  })
   @ApiQuery({
     name: 'from',
+    required: false,
+    description: 'Filter users by from date',
+    type: String,
+  })
+  @ApiQuery({
+    name: 'to',
     required: false,
     description: 'Filter users by from date',
     type: String,
@@ -29,13 +39,16 @@ export class ValidatorEffectivenessController {
     name: 'filterType',
     required: false,
     description: 'Filter result by specific type',
-    type: String,
+    enum: FILTER_TYPE,
+    example: FILTER_TYPE.datetime,
   })
   @ApiQuery({
     name: 'granularity',
     required: false,
     description: 'Granularity of result by day, week, month',
     type: String,
+    enum: GRANULARITY_TYPE,
+    example: GRANULARITY_TYPE.day,
   })
   @ApiQuery({
     name: 'size',
@@ -44,17 +57,10 @@ export class ValidatorEffectivenessController {
     type: Number,
   })
   getValidtorEffectiveness(
-    @Query('request') ValidtorEffectiveness,
-    @Query('from') from: string,
-    @Query('filterType') filterType: string,
-    @Query('granularity') granularity: string,
-    @Query('size') size: number,
+    @Query() validatorEffectivenessDto: ValidatorEffectivenessDto,
   ): Observable<any> {
     return this.validatorEffectivenessService.getValidtorEffectiveness(
-      from,
-      granularity,
-      filterType,
-      size,
+      validatorEffectivenessDto,
     );
   }
 }

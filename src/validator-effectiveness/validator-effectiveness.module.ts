@@ -6,10 +6,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ValidatorEffectiveness } from './entities/validator-effectiveness.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([ValidatorEffectiveness]),
-    HttpModule],
+  imports: [TypeOrmModule.forFeature([ValidatorEffectiveness]), HttpModule],
   controllers: [ValidatorEffectivenessController],
   providers: [ValidatorEffectivenessService],
+  exports: [ValidatorEffectivenessService],
 })
 export class ValidatorEffectivenessModule {}

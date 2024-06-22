@@ -6,24 +6,20 @@ import { ConfigModule } from '@nestjs/config';
 import { ValidatorEffectivenessModule } from './validator-effectiveness/validator-effectiveness.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OpertaorEffectivenessModule } from './opertaor-effectiveness/opertaor-effectiveness.module';
+import { DatabaseModule } from './database/database.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { JobModule } from './job/job.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: '127.0.0.1',
-      port: 5432,
-      password: 'postgres',
-      username: 'postgres',
-      database: 'postgres',
-      synchronize: true,
-      logging: true,
-      autoLoadEntities: true,
-    }),
+    DatabaseModule,
+    ScheduleModule.forRoot(),
     NetworkStatsModule,
     ValidatorEffectivenessModule,
     OpertaorEffectivenessModule,
+    DatabaseModule,
+    JobModule,
   ],
   controllers: [AppController],
   providers: [AppService],

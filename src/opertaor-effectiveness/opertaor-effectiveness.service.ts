@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateOpertaorEffectivenessDto } from './dto/create-opertaor-effectiveness.dto';
-import { UpdateOpertaorEffectivenessDto } from './dto/update-opertaor-effectiveness.dto';
 import { OpertaorEffectiveness } from './entities/opertaor-effectiveness.entity';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
@@ -9,6 +7,7 @@ import { Repository } from 'typeorm';
 import { DBAbstractService } from 'src/shared/db-abstract.service';
 import { error } from 'console';
 import { Observable, map } from 'rxjs';
+import { OperatorEffectivenessDto } from './dto/operator-effectiveness.dto';
 
 @Injectable()
 export class OpertaorEffectivenessService extends DBAbstractService {
@@ -22,10 +21,7 @@ export class OpertaorEffectivenessService extends DBAbstractService {
   }
 
   getOperatorEffectiveness(
-    fromDate: string,
-    granularity: string,
-    filterType: string,
-    size: number,
+    operatorEffectivenessDto: OperatorEffectivenessDto,
   ): Observable<any> {
     try {
       const reqHeaders = {
@@ -35,15 +31,13 @@ export class OpertaorEffectivenessService extends DBAbstractService {
       };
 
       const params = {
-        from: fromDate,
-        granularity: granularity,
-        filterType: filterType,
-        size: size,
+        from: operatorEffectivenessDto.from,
+        granularity: operatorEffectivenessDto.granularity,
+        filterType: operatorEffectivenessDto.filterType,
+        size: operatorEffectivenessDto.size,
       };
 
-      console.log(`validatorPubKey :${this.configService.get('OPERATOR_1')}`);
-      console.log(`params :${JSON.stringify(params)}`);
-      const URL = `/operators/${this.configService.get('OPERATOR_1')}/effectiveness`;
+      const URL = `/operators/${operatorEffectivenessDto.operatorId}/effectiveness`;
       const result = this.httpService
         .get(this.configService.get('BASE_URL') + URL, {
           headers: reqHeaders,
